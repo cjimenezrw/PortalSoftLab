@@ -1,0 +1,27 @@
+{
+    "target-dir":"/var/www/portal/core/assets",
+    "autoload": {
+        "psr-4": {
+            "WebSocketMessenger\\": "src",
+            "WebSocketHeavy\\": "src",
+            "WebSocketSpammer\\": "src"
+        }
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "1.14.1",
+	"mpdf/mpdf": "8.0.4",
+        "swiftmailer/swiftmailer": "5.4.*",
+        "php": ">=5.3.3",
+        "ext-xml": "*",
+        "zendframework/zend-escaper": "2.4.*",
+        "zendframework/zend-stdlib": "2.4.*",
+        "zendframework/zend-validator": "2.4.*",
+        "phpoffice/common": "0.2.*",
+        "phpoffice/phpword": "v0.13.*",
+        "tecnickcom/tcpdf":"*",
+        "cboden/ratchet": "^0.4",
+        "ratchet/pawl": "0.3.*",
+        "react/socket":"v1.6.0",
+        "linfo/linfo" : "*"
+    }
+}
