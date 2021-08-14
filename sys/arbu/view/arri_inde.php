@@ -301,7 +301,7 @@
                <div class="pb-8 position-relative">
                   <div class="browser shadow-lg mx-auto" data-aos="fade-up" style="width:100% !important">
                      <div class="screen">
-                        <table id="example" class="display" style="width:100% !important">
+                        <table id="example-table" class="display" style="width:100% !important">
    <thead>
       <tr>
             <th>Código</th>
@@ -424,7 +424,12 @@
                      </ul>
                   </div>
                   <div class="col-md-7">
-                     <figure data-aos="fade-left"><img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/img/automate-social/build.svg" class="img-responsive" alt=""></figure>
+                     <!--
+                     <figure data-aos="fade-left">
+                        <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/img/automate-social/build.svg" class="img-responsive" alt="">
+                     </figure>
+                     !-->
+                     <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/img/automate-social/build.svg" class="img-responsive" alt="">
                   </div>
                </div>
                <!--
@@ -664,7 +669,7 @@
                      </nav>
                   </div>
                </div>
-            </div>
+            </div>Integrations
          </footer>
       </main>
       <!-- themeforest:js -->
@@ -674,11 +679,14 @@
       <script src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/js/<?php echo VERSION; ?>/<?php echo $this->sysModule; ?>.js"></script>
       <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
       <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+      
+      
       <script type="text/javascript">
          $(document).ready(function () {
-            $('#example').DataTable();
+            $('#example-table').DataTable();
          });
       </script>
+      
       <!-- endinject -->
    </body>
 </html>
