@@ -20,6 +20,11 @@ Class Arri_inde_Controller Extends Arbu_Model {
 
     public function __destruct() { }
 
+    public function get_buques_arribos(){
+        $this->data['get_buques_arribos'] = parent::_get_buques_arribos();
+        return $this->data;
+    }
+
     public function readXLSX(){
 
         $fileid = '1QYZFPBQlBCNP_Hkf7gOgNMr6aKxs70qr';
@@ -85,7 +90,6 @@ Class Arri_inde_Controller Extends Arbu_Model {
             //exit('<pre>'.print_r($buques,1).'</pre>');
             exit('<pre>'.print_r('Muajajaja, Habemus Buques y Arribos!',1).'</pre>');
         }
-
     }
 
 }

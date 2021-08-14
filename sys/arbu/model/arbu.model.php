@@ -60,4 +60,19 @@ Class Arbu_Model Extends DLOREAN_Model {
         return $record;
     }
 
+    public function _get_buques_arribos(){
+        $sql = "SELECT 
+                b.skBuque,b.sNombre,b.sTipoTrafico,b.sLineaNaviera,b.sBandera,
+                a.sCodigo,a.sCodigoPuerto,a.sCodigoAtraque,a.sViaje,a.sIndicativoLlamada,a.dFechaInicioOperaciones,a.dFechaTerminoOperaciones
+            FROM cat_buques b
+            INNER JOIN ope_arribos a ON a.skBuque = b.skBuque
+            WHERE b.skEstatus = 'AC' AND a.skEstatus = 'AC' ORDER BY dFechaInicioOperaciones DESC";
+
+        $result = Conn::query($sql);
+        if (!$result) { return false; }
+        $records = Conn::fetch_assoc_all($result);
+        utf8($records);
+        return $records;
+    }
+
 }

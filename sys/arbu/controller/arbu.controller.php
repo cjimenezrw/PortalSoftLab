@@ -33,7 +33,8 @@ Class Arbu_Controller Extends Arbu_Model {
                 require_once(CORE_PATH . 'src' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'footer.php');
                 require_once(CORE_PATH . 'src' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'stage' . DIRECTORY_SEPARATOR . 'analyticstracking.php');
                 */
-                $this->load_view('arri_inde',[],NULL,FALSE);
+                
+                $this->load_view('arri_inde',$arri_inde->get_buques_arribos(),NULL,FALSE);
                 break;
         }
         return;
