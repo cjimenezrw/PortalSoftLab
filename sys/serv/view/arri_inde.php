@@ -106,10 +106,13 @@
       </span>
     </a>
     <div class="tocify-wrapper">
+    <div class="name" style="background-color: #333;height:80px;">
       <a href="https://www.softlab.mx" target="_blank">
-        <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/images/logo.png" width="50" alt="Logo" />
+        <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/images/logo.png" width="120px" alt="Logo" />
       </a>
+
       <div class="name">documentación</div>
+      </div>
         <div class="lang-selector">
               <!--<a href="index.html#" data-language-name="shell">cURL</a>
               <a href="index.html#" data-language-name="javascript">Node.js</a>
@@ -119,8 +122,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='https://www.softlab.mx' target='_blank'>Obten tu llave  </a></li>
-            <li><a href='https://www.softlab.mx' target='_blank'>SOFTLAPI</a></li>
+            <li><a href='https://www.softlab.mx' target='_blank'>WEB SERVICES</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -145,9 +147,9 @@
 <h3 id="ambientes-y-llaves-secretas">Ambientes  </h3>
 
  
-<h4 id="ambiente-live">Ambiente Produccion</h4>
+<h4 id="ambiente-live">Ambiente Producción</h4>
 
-<p>Una vez que hayas terminado de configurar tu organización, podrás obtener tu llave secreta <code class="prettyprint">Produccion</code> para consultar los Arribos.</p>
+<p><code class="prettyprint">Produccion</code> para consultar los Arribos.</p>
   
 
           <h1 id="api-referencia">API (Referencia)</h1>
