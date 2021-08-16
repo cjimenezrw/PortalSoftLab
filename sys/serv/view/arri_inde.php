@@ -107,7 +107,7 @@
     </a>
     <div class="tocify-wrapper">
       <a href="https://www.softlab.mx" target="_blank">
-        <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/images/logo.svg" width="50" alt="Logo" />
+        <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/images/logo.png" width="50" alt="Logo" />
       </a>
       <div class="name">documentación</div>
         <div class="lang-selector">
