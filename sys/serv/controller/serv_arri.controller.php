@@ -29,13 +29,13 @@ Class Serv_arri_Controller Extends Serv_Model {
             $this->data['datos'] = []; 
             return $this->data;
        }
-       if(!empty($this->serv['p1']) &&  !in_array($this->serv['p1'], ['V1'])){
+       if(!empty($this->serv['p1']) &&  !in_array($this->serv['p1'], ['v1','V1'])){
             $this->data['success'] = FALSE; 
             $this->data['message'] = 'La Version no es Valida!'; 
             $this->data['datos'] = []; 
             return $this->data;
        }
-       if($this->serv['p1'] == 'V1'){
+       if(in_array($this->serv['p1'], ['v1','V1'])){
             $this->serv['pagina']         = (!empty($_POST['pagina']) ? $_POST['pagina'] : (!empty($_GET['pagina']) ? $_GET['pagina'] : NULL));
             $this->serv['tipoTrafico']         = (!empty($_POST['tipoTrafico']) ? $_POST['tipoTrafico'] : (!empty($_GET['tipoTrafico']) ? $_GET['tipoTrafico'] : NULL));
             $this->serv['buque']         = (!empty($_POST['buque']) ? $_POST['buque'] : (!empty($_GET['buque']) ? $_GET['buque'] : NULL));

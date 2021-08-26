@@ -9,7 +9,7 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <!-- Place favicon.ico in the root directory -->
       <link rel="apple-touch-icon" href="https://5studios.net/themes/dashcore3/apple-touch-icon.png">
-      <link rel="icon" href="<?php echo SYS_URL.'core/assets/tpl/images/favicon.png'; ?>">
+      <link rel="icon" href="https://portal.softlab.mx:443/sys/serv/view/images/favicon.ico">
       <link href="https://fonts.googleapis.com/css?family=Poppins:100,300,400,500,700,900" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Caveat" rel="stylesheet">
       <title>SoftLab</title>
@@ -59,7 +59,8 @@
                <div class="row gap-y">
                   <div class="col-lg-6">
                      <h1 class="text-contrast extra-bold display-md-3 display-lg-2 font-lg mb-5">Portal
-                     <span class="d-block light font-md">SoftLab</span></h1>
+                     <span class="d-block light font-md">SoftLab</span>
+                     </h1>
                      <p class="text-contrast lead">Portal Operativo / Administrativo el cual se adapta a los procesos que su empresa requiera.</p>
                      <a class="btn btn-rounded btn-primary btn-lg rounded-pill" href="https://softlab.mx/#contact">
                         <i class="fa fa-rocket d-inline d-md-none"></i> <span class="d-none d-md-inline">Contáctanos</span>
@@ -156,9 +157,11 @@
          <section class="section get-started1" style="width:100% !important;overflow: auto;">
             <div class="container bring-to-front">
                <div class="section-heading text-center">
-                  <h2 class="extra-bold">Por que a nosotros SI NOS IMPORTA MUCHO tener un <span style="text-decoration:underline;">Puerto Inteligente y Seguro</span></h2>
-                  <p class="lead text-muted"><span class="text-primary">SoftLab</span> - El <b>Software</b> que su Empresa <b>Necesita</b></p>
+                  <!--<h2 class="extra-bold">Por que a nosotros SI NOS IMPORTA MUCHO tener un <span style="text-decoration:underline;">Puerto Inteligente y Seguro</span></h2>!-->
+                  <h2 class="extra-bold">Consulta de Arribos y Buques</h2>
+                  <!--<p class="lead text-muted"><span class="text-primary">SoftLab</span> - El <b>Software</b> que su Empresa <b>Necesita</b></p>!-->
                   <p class="lead text-muted" style="text-align: left;"><span class="text-primary"><b>¡IMPORTANTE!</b></span> - La <b>Veracidad</b> de la información está sujeta al contenido del <b><a href="https://docs.google.com/spreadsheets/d/1QYZFPBQlBCNP_Hkf7gOgNMr6aKxs70qr/edit#gid=1338054736" target="_blank" style="text-decoration:underline;">Archivo Excel</a></b> de <b><a href="https://drive.google.com/drive/folders/1bGt6RPMpBBv-CXInYpyhqetGDf85vaqZ" target="_blank" style="text-decoration:underline;">Google Drive</a></b> proporcionado por <b>API Manzanillo</b></p>
+                  <img src="<?php echo SYS_URL; ?><?php echo $this->sysProject; ?>/<?php echo $this->sysModule; ?>/view/img/updateDRIVE.jpeg" alt="" style="width:100%">
                </div>
                <div class="pb-8 position-relative">
                   <div class="browser shadow-lg mx-auto" data-aos="fade-up" style="width:100% !important">
@@ -167,12 +170,18 @@
    <thead>
       <tr>
             <th>Código</th>
+            <!--
             <th>C. Puerto</th>
             <th>C. Atraque</th>
             <th>T. Tráfico</th>
+            !-->
             <th>Buque</th>
             <th>Naviera</th>
             <th>Viaje</th>
+            <th>Tramo</th>
+            <th>F. Cruce LP</th>
+            <th>F. Fondeo</th>
+            <th>F. Atraque</th>
             <th>F. Inicio Operaciones</th>
             <th>F. Término Operaciones</th>
             <th>Bandera</th>
@@ -186,14 +195,31 @@
       ?>
       <tr>
             <td><?php echo $v['sCodigo']; ?></td>
+            <!--
             <td><?php echo $v['sCodigoPuerto']; ?></td>
             <td><?php echo $v['sCodigoAtraque']; ?></td>
             <td><?php echo $v['sTipoTrafico']; ?></td>
+            !-->
             <td><?php echo $v['sNombre']; ?></td>
             <td><?php echo $v['sLineaNaviera']; ?></td>
             <td><?php echo $v['sViaje']; ?></td>
+            <td><?php echo $v['sTramo']; ?></td>
+
+            
+            <td><?php echo $v['dFechaCruceLP']; ?></td>
+            <td><?php echo $v['dFechaFondeo']; ?></td>
+            <td><?php echo $v['dFechaAtraque']; ?></td>
+            <td><?php echo $v['dFechaInicioOperaciones']; ?></td>
+            <td><?php echo $v['dFechaTerminoOperaciones']; ?></td>
+            
+            <!--
+            <td><?php echo (!empty($v['dFechaCruceLP']) ? date('d/m/Y H:i:s', strtotime($v['dFechaCruceLP'])) : NULL); ?></td>
+            <td><?php echo (!empty($v['dFechaFondeo']) ? date('d/m/Y H:i:s', strtotime($v['dFechaFondeo'])) : NULL); ?></td>
+            <td><?php echo (!empty($v['dFechaAtraque']) ? date('d/m/Y H:i:s', strtotime($v['dFechaAtraque'])) : NULL); ?></td>
             <td><?php echo (!empty($v['dFechaInicioOperaciones']) ? date('d/m/Y H:i:s', strtotime($v['dFechaInicioOperaciones'])) : NULL); ?></td>
             <td><?php echo (!empty($v['dFechaTerminoOperaciones']) ? date('d/m/Y H:i:s', strtotime($v['dFechaTerminoOperaciones'])) : NULL); ?></td>
+            !-->
+
             <td><?php echo $v['sBandera']; ?></td>
             <td><?php echo $v['sIndicativoLlamada']; ?></td>
       </tr>
@@ -331,7 +357,7 @@
                   <div class="col-md-8">
                      <nav class="nav justify-content-center justify-content-md-end">
                         <a href="https://www.facebook.com/softlabmx/" target="_blank" class="btn btn-circle btn-sm btn-secondary me-3 op-4"><i class="fab fa-facebook"></i></a> 
-                        <a href="https://wa.me/5213141609398/" target="_blank" class="btn btn-circle btn-sm btn-secondary me-3 op-4"><i class="fab fa-whatsapp"></i></a> 
+                        <!--<a href="https://wa.me/5213141609368/" target="_blank" class="btn btn-circle btn-sm btn-secondary me-3 op-4"><i class="fab fa-whatsapp"></i></a>!--> 
                      </nav>
                   </div>
                </div>
