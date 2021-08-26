@@ -21,7 +21,7 @@ Class Inic_Controller Extends Inic_Model {
 
     public function inic_sesi() {
 
-        $this->sysModule = 'arbu';
+        /*$this->sysModule = 'arbu';
         $this->load_class("arbu", "model");
         $this->load_class("arri_inde", "controller");
         $arri_inde = new Arri_inde_Controller();
@@ -32,20 +32,12 @@ Class Inic_Controller Extends Inic_Model {
                 echo json_encode($arri_inde->readXLSX(),true,512);
                 break;
             default:
-                /*if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-                    $sIp = $_SERVER['HTTP_CLIENT_IP'];
-                } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $sIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else {
-                    $sIp = $_SERVER['REMOTE_ADDR'];
-                }
-                $this->log('ACCESO WEB IP => '.$sIp,TRUE);*/
                 $_SESSION['usuario']['skUsuario'] = '4c1ecec7-3714-11eb-b3f3-44a8422a117f';
                 $this->log_access();
                 $this->load_view('arri_inde',$arri_inde->get_buques_arribos(),NULL,FALSE);
                 break;
         }
-        return;
+        return;*/
 
 
         //Mandamos llamar controller especial para la vista de inic-sesi

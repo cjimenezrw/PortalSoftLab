@@ -2873,6 +2873,7 @@ $.fn.core_docu_component = function (opt) {
     var settings = $.extend({
         skTipoExpediente: 'EXGRAL',
         skTipoDocumento: 'DOGRAL',
+        skCodigo: '',
         name: 'docu_file',
         skDocumento: '',
         caracteristicas: '',
@@ -2929,7 +2930,7 @@ $.fn.core_docu_component = function (opt) {
             autoProcessQueue: false,
             acceptedFiles: f,
             dictInvalidFileType: 'Archivo NO Permitido, Extensiones Permitidas: ' + config.extensiones.join(','),
-            dictRemoveFile: (settings.allowDelete ? '<b><i class="icon fa-trash" aria-hidden="true"></i> Eliminar</b>' : '   '),
+            dictRemoveFile: (settings.allowDelete ? 'Eliminar' : ''),
             dictDefaultMessage: 'Expediente: <b>'+config.tipoExpediente+'</b> | Documento: <b>'+config.tipoDocumento+'</b><br>Peso Máximo: <b>'+config.pesoMB+'MB</b> | Extensiones Permitidas: <b>' + config.extensiones.join(',') + '</b><br><i class="icon fa-cloud-upload" aria-hidden="true"></i> Arrastre y suelte archivos o haga clic',
             paramName: settings.name,
             removedfile: function (file) {
@@ -3216,10 +3217,27 @@ $.fn.core_docu_component = function (opt) {
     this.loadComposer = function () {
         var ledatinis = {};
 
+        /*if(settings.skDocumento != ''){
+            ledatinis['skDocumento'] = settings.skDocumento;
+        }else if(settings.caracteristicas != ''){
+            ledatinis['caracteristicas'] = settings.caracteristicas;
+        }else if(settings.skCodigo != ''){
+            ledatinis['skTipoExpediente'] = settings.skTipoExpediente;
+            ledatinis['skTipoDocumento'] = settings.skTipoDocumento;
+            ledatinis['skCodigo'] = settings.skCodigo;
+        }else{
+            ledatinis['skTipoExpediente'] = settings.skTipoExpediente;
+            ledatinis['skTipoDocumento'] = settings.skTipoDocumento;
+        }*/
+
         if(settings.skDocumento != ''){
             ledatinis['skDocumento'] = settings.skDocumento;
         }else if(settings.caracteristicas != ''){
             ledatinis['caracteristicas'] = settings.caracteristicas;
+        }else if(settings.skCodigo != ''){
+            ledatinis['skCodigo'] = settings.skCodigo;
+            ledatinis['skTipoExpediente'] = settings.skTipoExpediente;
+            ledatinis['skTipoDocumento'] = settings.skTipoDocumento;
         }else{
             ledatinis['skTipoExpediente'] = settings.skTipoExpediente;
             ledatinis['skTipoDocumento'] = settings.skTipoDocumento;
@@ -3271,6 +3289,7 @@ $.fn.core_docu_component = function (opt) {
                     tipoDocumento: settings.expeData.tipoDocumento,
                     extensiones: settings.expeData.extensiones,
                     pesoMB: settings.expeData.caracteristicas.SIZEDO.sValor,
+                    //docs: (ledatinis['skCodigo'] != '' ? res.data : [])
                     docs: res.data
                 };
 

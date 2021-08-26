@@ -1,6 +1,9 @@
 <?php
+require_once(SYS_PATH.'docu/controller/docu_serv_caracteristicas.controller.php');
 Class Docu_serv_Controller Extends Docu_Model {
-
+    
+    // TRAITS //
+        use Docu_serv_caracteristicas_Controller;
     // CONST //
 
     // PUBLIC VARIABLES //
@@ -34,23 +37,21 @@ Class Docu_serv_Controller Extends Docu_Model {
                 //Conn::rollback($this->idTran);
                 return $this->data;
             }
-
-        $configuracion_tipoExpediente_tipoDocumento = $this->configuracion_tipoExpediente_tipoDocumento();
-        $this->data['configuraciones'] = $configuracion_tipoExpediente_tipoDocumento['data'];
+        // OBTENEMOS LA CONFIGURACIÓN DEL DOCUMENTO
+            $configuracion_tipoExpediente_tipoDocumento = $this->configuracion_tipoExpediente_tipoDocumento();
+            $this->data['data'] = NULL;
+            $this->data['configuraciones'] = $configuracion_tipoExpediente_tipoDocumento['data'];
 
         // VALIDAR CONFIGURACIÓN DE EXPEDIENTE DOCUMENTO
             $validar_expediente_documento = $this->validar_expediente_documento();
+            
             if(!$validar_expediente_documento['success']){
                 //Conn::rollback($this->idTran);
                 return $this->data;
             }
-
-// CARACTERÍSTICAS DE DOCUMENTO
-
-            /*
-            exit('<pre>'.print_r($this->configuracion_tipoExpediente_tipoDocumento(),1).'</pre>');
-
-            $caracteristicas_documento = $this->caracteristicas_documento();
+            
+        // CARACTERÍSTICAS DE DOCUMENTO
+            /*$caracteristicas_documento = $this->caracteristicas_documento();
             if(!$caracteristicas_documento['success']){
                 //Conn::rollback($this->idTran);
                 return $this->data;
@@ -117,21 +118,42 @@ Class Docu_serv_Controller Extends Docu_Model {
                 ]
             ];
         }
-exit('<pre>'.print_r($this->docu['docu_file_array'],1).'</pre>');
-        /*$_get_tiposDocumentos_extensiones = parent::_get_tiposDocumentos_extensiones();
-        $sContentType = array_column($_get_tiposDocumentos_extensiones,'sContentType');
-        $sExtension = array_column($_get_tiposDocumentos_extensiones,'sExtension');*/
 
         foreach($this->docu['docu_file_array'] AS $k=>&$v){
-            //if(!in_array($v['type'],$sContentType)){
-            if(!in_array($v['type'], $this->data['configuraciones']['contentTypes'])){
-                $this->data['success'] = FALSE;
-                //$this->data['message'] = 'SOLO SE ACEPTAN LAS EXTENSIONES: '.implode(', ',$sExtension);
-                $this->data['message'] = 'SOLO SE ACEPTAN LAS EXTENSIONES: '.implode(', ',$this->data['configuraciones']['extensiones']);
-                return $this->data;
-            }
-            //$v['sExtension'] = $_get_tiposDocumentos_extensiones[array_search($v['type'], $sContentType)]['sExtension'];
-            $v['sExtension'] = $this->data['configuraciones']['extensiones'][array_search($v['type'], $this->data['configuraciones']['contentTypes'])];
+
+            // VALIDAMOS LAS EXTENSIONES DE DOCUMENTO //
+                if(!in_array($v['type'], $this->data['configuraciones']['contentTypes'])){
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = 'SOLO SE ACEPTAN LAS EXTENSIONES: '.implode(', ',$this->data['configuraciones']['extensiones']);
+                    return $this->data;
+                }
+
+                $v['sExtension'] = $this->data['configuraciones']['extensiones'][array_search($v['type'], $this->data['configuraciones']['contentTypes'])];
+
+            // CARACTERÍSTICA (PESO DE DOCUMENTO EN MB) //
+                if(!isset($this->data['configuraciones']['caracteristicas']['SIZEDO'])){
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = 'FALTA CONFIGURACIÓN DE PESO MÁXIMO PERMITIDO (Expediente: '.$this->data['configuraciones']['tipoExpediente'].', Documento: '.$this->data['configuraciones']['tipoDocumento'].')';
+                    return $this->data;
+                }
+
+                $skCaracteristica = $this->data['configuraciones']['caracteristicas']['SIZEDO']['skCaracteristica'];
+                if(!method_exists($this, $skCaracteristica)){
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = 'NO SE ENCONTRÓ EL MÉTODO DE LA CARACTERÍSTICA ('.$this->data['configuraciones']['caracteristicas']['SIZEDO']['sNombre'].')';
+                    return $this->data;
+                }
+
+                $caracteristica = $this->$skCaracteristica([
+                    'caracteristica'=>$this->data['configuraciones']['caracteristicas']['SIZEDO'],
+                    'peso_bytes'=>$v['size']
+                ]);
+                
+                if(!$caracteristica || isset($caracteristica['success']) && $caracteristica['success'] != 1){
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = $caracteristica['message'];
+                    return $this->data;
+                }
         }
 
         $this->data['success'] = TRUE;
@@ -176,19 +198,7 @@ exit('<pre>'.print_r($this->docu['docu_file_array'],1).'</pre>');
             $this->docu['sNombre'] = $this->docu['skTipoExpediente'].'_'.$this->docu['skTipoDocumento'].'_'.$v['sConsecutivo'].'.'.$v['sExtension'];
             $this->docu['sNombreOriginal'] = $v['name'];
             $this->docu['sUbicacion'] = 'expedientes/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/'.$this->docu['sNombre'];
-
-            if(!isset($this->data['configuraciones']['caracteristicas']['SIZEDO'])){
-                $this->data['success'] = FALSE;
-                $this->data['message'] = 'FALTA CONFIGURACIÓN DE PESO MÁXIMO PERMITIDO (Expediente: '.$this->data['configuraciones']['tipoExpediente'].', Documento: '.$this->data['configuraciones']['tipoDocumento'].')';
-                return $this->data;
-            }
-
-            if((($v['size'] / 1000) / 1000) > $this->data['configuraciones']['caracteristicas']['SIZEDO']['sValor']){
-                $this->data['success'] = FALSE;
-                $this->data['message'] = 'EL DOCUMENTO EXCEDE EL PESO MÁXIMO PERMITIDO ('.$this->data['configuraciones']['caracteristicas']['SIZEDO']['sValor'].'MB)';
-                return $this->data;
-            }
-
+            
             if(!is_dir($EXPEDIENTE)) {
                 if(!mkdir($EXPEDIENTE, 0777, TRUE)) {
                     $this->data['success'] = FALSE;
@@ -273,6 +283,14 @@ exit('<pre>'.print_r($this->docu['docu_file_array'],1).'</pre>');
                 //Conn::rollback($this->idTran);
                 return $this->data;
             }
+
+        // VALIDAMOS QUE VENGAN LOS FILTROS
+            if(!isset($this->docu['skCodigo']) || empty($this->docu['skCodigo'])){
+                if(empty($this->docu['skDocumento']) || empty($this->docu['caracteristicas'])){
+                    return $this->data;        
+                }
+            }
+
 
         // OBTENEMOS LOS DOCUMENTOS
             $this->docu['skEstatus'] = 'AC';
