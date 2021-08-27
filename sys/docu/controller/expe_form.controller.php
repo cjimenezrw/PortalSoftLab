@@ -38,7 +38,7 @@ Class Expe_form_Controller Extends Docu_Model {
 //exit('<pre>'.print_r($_FILES,1).'</pre>');
 //exit('<pre>'.print_r(json_decode($_POST['docu_file_OPERAT_FOTOGR'], true, 512),1).'</pre>');
 
-            $guardar_documento = $this->sysAPI('docu', 'docu_serv', 'guardar', [
+            /*$guardar_documento = $this->sysAPI('docu', 'docu_serv', 'guardar', [
                 'POST'=>[
                     'skTipoExpediente'=>'OPERAT',
                     'skTipoDocumento'=>'PEDIME',
@@ -51,9 +51,9 @@ Class Expe_form_Controller Extends Docu_Model {
 
             if(!$guardar_documento || isset($guardar_documento['success']) && $guardar_documento['success'] != 1){
                 return $guardar_documento;
-            }
+            }*/
 
-            $guardar_documento = $this->sysAPI('docu', 'docu_serv', 'guardar', [
+            /*$guardar_documento = $this->sysAPI('docu', 'docu_serv', 'guardar', [
                 'POST'=>[
                     'skTipoExpediente'=>'OPERAT',
                     'skTipoDocumento'=>'BILLLA',
@@ -66,7 +66,7 @@ Class Expe_form_Controller Extends Docu_Model {
 
             if(!$guardar_documento || isset($guardar_documento['success']) && $guardar_documento['success'] != 1){
                 return $guardar_documento;
-            }
+            }*/
             
             $guardar_documento = $this->sysAPI('docu', 'docu_serv', 'guardar', [
                 'POST'=>[

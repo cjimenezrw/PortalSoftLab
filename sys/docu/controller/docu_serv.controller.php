@@ -130,7 +130,7 @@ Class Docu_serv_Controller Extends Docu_Model {
 
                 $v['sExtension'] = $this->data['configuraciones']['extensiones'][array_search($v['type'], $this->data['configuraciones']['contentTypes'])];
 
-            // CARACTERÍSTICA (PESO DE DOCUMENTO EN MB) //
+            // CARACTERÍSTICA PESO DE DOCUMENTO EN MB (SIZEDO) //
                 if(!isset($this->data['configuraciones']['caracteristicas']['SIZEDO'])){
                     $this->data['success'] = FALSE;
                     $this->data['message'] = 'FALTA CONFIGURACIÓN DE PESO MÁXIMO PERMITIDO (Expediente: '.$this->data['configuraciones']['tipoExpediente'].', Documento: '.$this->data['configuraciones']['tipoDocumento'].')';
@@ -190,6 +190,7 @@ Class Docu_serv_Controller Extends Docu_Model {
 
         $DOCUME = parent::getVariable('DOCUME');
         $EXPEDIENTE = DIR_PROJECT.$DOCUME.'expedientes/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/';
+        $THUMBNAIL = DIR_PROJECT.$DOCUME.'thumbnails/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/';
 
         foreach($this->docu['docu_file_array'] AS $k=>&$v){
             $this->docu['skDocumento'] = $v['skDocumento'];
@@ -198,6 +199,7 @@ Class Docu_serv_Controller Extends Docu_Model {
             $this->docu['sNombre'] = $this->docu['skTipoExpediente'].'_'.$this->docu['skTipoDocumento'].'_'.$v['sConsecutivo'].'.'.$v['sExtension'];
             $this->docu['sNombreOriginal'] = $v['name'];
             $this->docu['sUbicacion'] = 'expedientes/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/'.$this->docu['sNombre'];
+            $this->docu['sUbicacionThumbnail'] = NULL;
             
             if(!is_dir($EXPEDIENTE)) {
                 if(!mkdir($EXPEDIENTE, 0777, TRUE)) {
@@ -215,14 +217,51 @@ Class Docu_serv_Controller Extends Docu_Model {
     
             chmod($EXPEDIENTE.$this->docu['sNombre'], 0777);
 
-            $stp_docu_documentos = parent::stp_docu_documentos();
+            // CARACTERÍSTICA GENERAR THUMBNAIL (THUMBN) //
+                if(isset($this->data['configuraciones']['caracteristicas']['THUMBN'])){
 
-            if(!$stp_docu_documentos || isset($stp_docu_documentos['success']) && $stp_docu_documentos['success'] != 1){
-                $this->data['success'] = FALSE;
-                $this->data['message'] = 'HUBO UN ERROR AL SUBIR EL DOCUMENTO';
-                $this->data['messageSQL'] = (isset($stp_docu_documentos['messageSQL']) ? $stp_docu_documentos['messageSQL'] : NULL);
-                return $this->data;
-            }
+                    if(!is_dir($THUMBNAIL)) {
+                        if(!mkdir($THUMBNAIL, 0777, TRUE)) {
+                            $this->data['success'] = FALSE;
+                            $this->data['message'] = 'NO SE PUDO CREAR EL DIRECTORIO DEL EXPEDIENTE';
+                            return $this->data;
+                        }
+                    }
+
+                    $skCaracteristica = $this->data['configuraciones']['caracteristicas']['THUMBN']['skCaracteristica'];
+                    if(!method_exists($this, $skCaracteristica)){
+                        $this->data['success'] = FALSE;
+                        $this->data['message'] = 'NO SE ENCONTRÓ EL MÉTODO DE LA CARACTERÍSTICA ('.$this->data['configuraciones']['caracteristicas']['THUMBN']['sNombre'].')';
+                        return $this->data;
+                    }
+
+                    $caracteristica = $this->$skCaracteristica([
+                        'caracteristica'=>$this->data['configuraciones']['caracteristicas']['THUMBN'],
+                        'directory'=>$THUMBNAIL,
+                        'source'=>$EXPEDIENTE.$this->docu['sNombre'],
+                        'destination'=>$THUMBNAIL.$this->docu['sNombre'],
+                        'width'=>NULL,
+                        'height'=>NULL
+                    ]);
+                    
+                    if(!$caracteristica || isset($caracteristica['success']) && $caracteristica['success'] != 1){
+                        $this->data['success'] = FALSE;
+                        $this->data['message'] = $caracteristica['message'];
+                        return $this->data;
+                    }
+
+                    $this->docu['sUbicacionThumbnail'] = 'thumbnails/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/'.$this->docu['sNombre'];
+                }
+            
+            // ACTUALIZAMOS LA UBICACIÓN DEL DOCUMENTO
+                $stp_docu_documentos = parent::stp_docu_documentos();
+
+                if(!$stp_docu_documentos || isset($stp_docu_documentos['success']) && $stp_docu_documentos['success'] != 1){
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = 'HUBO UN ERROR AL SUBIR EL DOCUMENTO';
+                    $this->data['messageSQL'] = (isset($stp_docu_documentos['messageSQL']) ? $stp_docu_documentos['messageSQL'] : NULL);
+                    return $this->data;
+                }
 
         }
 
@@ -335,6 +374,7 @@ Class Docu_serv_Controller Extends Docu_Model {
         $this->docu['skTipoDocumento'] = $_get_documentos[0]['skTipoDocumento'];
         $this->docu['skCodigo'] = $_get_documentos[0]['skCodigo'];
         $this->docu['sNombre'] = $_get_documentos[0]['sNombre'];
+        $this->docu['sUbicacionThumbnail'] = $_get_documentos[0]['sUbicacionThumbnail'];
 
         $this->docu['sUbicacion'] = 'trash_expedientes/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/'.$this->docu['sNombre'];
 
@@ -342,31 +382,58 @@ Class Docu_serv_Controller Extends Docu_Model {
         $EXPEDIENTE = DIR_PROJECT.$DOCUME.'expedientes/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/';
         $EXPEDIENTE_TRASH = DIR_PROJECT.$DOCUME.'trash_expedientes/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/';
 
-        if(!is_dir($EXPEDIENTE_TRASH)) {
-            if(!mkdir($EXPEDIENTE_TRASH, 0777, TRUE)) {
+        $THUMBNAIL = DIR_PROJECT.$DOCUME.'thumbnails/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/';
+        $THUMBNAIL_TRASH = DIR_PROJECT.$DOCUME.'trash_thumbnails/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/';
+
+        // EXPEDIENTE //
+            if(!is_dir($EXPEDIENTE_TRASH)) {
+                if(!mkdir($EXPEDIENTE_TRASH, 0777, TRUE)) {
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = 'NO SE PUDO CREAR EL DIRECTORIO TRASH DEL EXPEDIENTE';
+                    return $this->data;
+                }
+            }
+
+            if(!copy($EXPEDIENTE.$this->docu['sNombre'], $EXPEDIENTE_TRASH.$this->docu['sNombre'])){
                 $this->data['success'] = FALSE;
-                $this->data['message'] = 'NO SE PUDO CREAR EL DIRECTORIO TRASH DEL EXPEDIENTE';
+                $this->data['message'] = 'HUBO UN ERROR AL MOVER EL DOCUMENTO';
                 return $this->data;
             }
-        }
 
-        if(!copy($EXPEDIENTE.$this->docu['sNombre'], $EXPEDIENTE_TRASH.$this->docu['sNombre'])){
-            $this->data['success'] = FALSE;
-            $this->data['message'] = 'HUBO UN ERROR AL MOVER EL DOCUMENTO';
-            return $this->data;
-        }
+            chmod($EXPEDIENTE_TRASH.$this->docu['sNombre'], 0777);
 
-        chmod($EXPEDIENTE_TRASH.$this->docu['sNombre'], 0777);
+            unlink($EXPEDIENTE.$this->docu['sNombre']);
 
-        unlink($EXPEDIENTE.$this->docu['sNombre']);
+        // THUMBNAIL //
+            if(!empty($this->docu['sUbicacionThumbnail'])){
+                $this->docu['sUbicacionThumbnail'] = 'trash_thumbnails/'.$this->docu['skTipoExpediente'].'/'.$this->docu['skCodigo'].'/'.$this->docu['sNombre'];
+                if(!is_dir($THUMBNAIL_TRASH)) {
+                    if(!mkdir($THUMBNAIL_TRASH, 0777, TRUE)) {
+                        $this->data['success'] = FALSE;
+                        $this->data['message'] = 'NO SE PUDO CREAR EL DIRECTORIO TRASH DEL THUMBNAIL';
+                        return $this->data;
+                    }
+                }
 
-        $stp_docu_documentos = parent::stp_docu_documentos();
+                if(!copy($THUMBNAIL.$this->docu['sNombre'], $THUMBNAIL_TRASH.$this->docu['sNombre'])){
+                    $this->data['success'] = FALSE;
+                    $this->data['message'] = 'HUBO UN ERROR AL MOVER EL THUMBNAIL DEL DOCUMENTO';
+                    return $this->data;
+                }
 
-        if(!$stp_docu_documentos || isset($stp_docu_documentos['success']) && $stp_docu_documentos['success'] != 1){
-            $this->data['success'] = FALSE;
-            $this->data['message'] = 'HUBO UN ERROR AL ELIMINAR EL DOCUMENTO';
-            return $this->data;
-        }
+                chmod($THUMBNAIL_TRASH.$this->docu['sNombre'], 0777);
+
+                unlink($THUMBNAIL.$this->docu['sNombre']);
+            }
+            
+        // ACTUALIZAMOS LA UBICACIÓN DEL DOCUMENTO
+            $stp_docu_documentos = parent::stp_docu_documentos();
+
+            if(!$stp_docu_documentos || isset($stp_docu_documentos['success']) && $stp_docu_documentos['success'] != 1){
+                $this->data['success'] = FALSE;
+                $this->data['message'] = 'HUBO UN ERROR AL ELIMINAR EL DOCUMENTO';
+                return $this->data;
+            }
 
         $this->data['success'] = TRUE;
         $this->data['message'] = 'DOCUMENTO ELIMINADO';
