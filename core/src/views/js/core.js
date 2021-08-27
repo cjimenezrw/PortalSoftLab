@@ -2873,7 +2873,6 @@ $.fn.core_docu_component = function (opt) {
     var settings = $.extend({
         skTipoExpediente: 'EXGRAL',
         skTipoDocumento: 'DOGRAL',
-        skCodigo: '',
         name: 'docu_file',
         skDocumento: '',
         caracteristicas: '',
@@ -2926,12 +2925,12 @@ $.fn.core_docu_component = function (opt) {
             dictFileTooBig: 'El archivo es demasiado grande, Peso Máximo: '+ config.pesoMB + 'MB',
             addRemoveLinks: true,
             //dictRemoveFileConfirmation: true,
-            replace: '<i class="icon fa-cloud-upload" aria-hidden="true"></i> Arrastre un archivo o haga clic en reemplazar <br> Solo se permiten '  + config.extensiones.join(' , '),
+            replace: '<i class="icon fa-cloud-upload" aria-hidden="true"></i> Arrastre un archivo o haga clic en reemplazar <br> Solo se permiten '  + config.extensiones.join(','),
             autoProcessQueue: false,
             acceptedFiles: f,
             dictInvalidFileType: 'Archivo NO Permitido, Extensiones Permitidas: ' + config.extensiones.join(','),
-            dictRemoveFile: (settings.allowDelete ? 'Eliminar' : ''),
-            dictDefaultMessage: 'Expediente: <b>'+config.tipoExpediente+'</b> | Documento: <b>'+config.tipoDocumento+'</b><br>Peso Máximo: <b>'+config.pesoMB+'MB</b> | Extensiones Permitidas: <b>' + config.extensiones.join(' , ') + '</b><br><i class="icon fa-cloud-upload" aria-hidden="true"></i> Arrastre y suelte archivos o haga clic',
+            dictRemoveFile: (settings.allowDelete ? '<b><i class="icon fa-trash" aria-hidden="true"></i> Eliminar</b>' : '   '),
+            dictDefaultMessage: 'Expediente: <b>'+config.tipoExpediente+'</b> | Documento: <b>'+config.tipoDocumento+'</b><br>Peso Máximo: <b>'+config.pesoMB+'MB</b> | Extensiones Permitidas: <b>' + config.extensiones.join(',') + '</b><br><i class="icon fa-cloud-upload" aria-hidden="true"></i> Arrastre y suelte archivos o haga clic',
             paramName: settings.name,
             removedfile: function (file) {
                 if (!file.hasOwnProperty('skDocumento')) {
@@ -3055,8 +3054,8 @@ $.fn.core_docu_component = function (opt) {
         this.empty().append(le);
         $('input[name="' + settings.name + '"]').dropify({
             "messages": {
-                default: "Expediente: <b>"+config.tipoExpediente+"</b> | Documento: <b>"+config.tipoDocumento+"</b><br>Peso Máximo: <b>"+config.pesoMB+"MB</b> | Extensiones Permitidas: <b>" + config.extensiones.join(' , ') + "</b><br>Arrastre y suelte archivos o haga clic",
-                replace: "Expediente: <b>"+config.tipoExpediente+"</b> | Documento: <b>"+config.tipoDocumento+"</b><br>Peso Máximo: <b>"+config.pesoMB+"MB</b> | Extensiones Permitidas: <b>" + config.extensiones.join(' , ') + "</b><br>Arrastre y suelte archivos o haga clic",
+                default: "Expediente: <b>"+config.tipoExpediente+"</b> | Documento: <b>"+config.tipoDocumento+"</b><br>Peso Máximo: <b>"+config.pesoMB+"MB</b> | Extensiones Permitidas: <b>" + config.extensiones.join(',') + "</b><br>Arrastre y suelte archivos o haga clic",
+                replace: "Expediente: <b>"+config.tipoExpediente+"</b> | Documento: <b>"+config.tipoDocumento+"</b><br>Peso Máximo: <b>"+config.pesoMB+"MB</b> | Extensiones Permitidas: <b>" + config.extensiones.join(',') + "</b><br>Arrastre y suelte archivos o haga clic",
                 remove: '<b><i class="icon fa-trash" aria-hidden="true"></i> Eliminar</b>',
                 error: 'Revise la Configuración del Componente de Documentación'
             },
@@ -3176,7 +3175,7 @@ $.fn.core_docu_component = function (opt) {
     this.readOnlyItem = function (doc) {
         return '<div class="dz-preview dz-complete dz-image-preview">\n\
                     <div class="dz-image">\n\
-                        <img data-dz-thumbnail="" alt="Documento" \n\
+                        <img data-dz-thumbnail="" alt="Factura comercial_PDOC_007.docx" \n\
                             src="' + doc.sUbicacionPublicaThumbnail + '" \n\
                             style="height: 95px;">\n\
                     </div>\n\
@@ -3221,10 +3220,6 @@ $.fn.core_docu_component = function (opt) {
             ledatinis['skDocumento'] = settings.skDocumento;
         }else if(settings.caracteristicas != ''){
             ledatinis['caracteristicas'] = settings.caracteristicas;
-        }else if(settings.skCodigo != ''){
-            ledatinis['skCodigo'] = settings.skCodigo;
-            ledatinis['skTipoExpediente'] = settings.skTipoExpediente;
-            ledatinis['skTipoDocumento'] = settings.skTipoDocumento;
         }else{
             ledatinis['skTipoExpediente'] = settings.skTipoExpediente;
             ledatinis['skTipoDocumento'] = settings.skTipoDocumento;
