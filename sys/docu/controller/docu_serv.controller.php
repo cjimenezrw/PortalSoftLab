@@ -50,15 +50,6 @@ Class Docu_serv_Controller Extends Docu_Model {
                 return $this->data;
             }
             
-        // CARACTERÍSTICAS DE DOCUMENTO
-            /*$caracteristicas_documento = $this->caracteristicas_documento();
-            if(!$caracteristicas_documento['success']){
-                //Conn::rollback($this->idTran);
-                return $this->data;
-            }
-            exit('<pre>'.print_r('CARACTERÍSTICAS DE DOCUMENTO',1).'</pre>');
-            */
-            
         // GUARDAR
             $guardar_documento = $this->guardar_documento();
             if(!$guardar_documento['success']){
@@ -74,11 +65,11 @@ Class Docu_serv_Controller Extends Docu_Model {
             }
 
         // CARACTERÍSTICAS DE DOCUMENTO
-            /*$caracteristicas_documento = $this->caracteristicas_documento();
+            $caracteristicas_documento = $this->caracteristicas_documento();
             if(!$caracteristicas_documento['success']){
                 //Conn::rollback($this->idTran);
                 return $this->data;
-            }*/
+            }
 
             $this->data['data'] = [
                 'skDocumento'=>array_column($this->docu['docu_file_array'], 'skDocumento')
@@ -176,7 +167,6 @@ Class Docu_serv_Controller Extends Docu_Model {
 
             $v['skDocumento'] = $stp_docu_documentos['skDocumento'];
             $v['sConsecutivo'] = $stp_docu_documentos['sConsecutivo'];
-            
         }
 
         $this->data['success'] = TRUE;
@@ -274,8 +264,6 @@ Class Docu_serv_Controller Extends Docu_Model {
         $this->data['success'] = TRUE;
         $this->docu['axn'] = 'caracteristicas_documento';
 
-        exit('<pre>'.print_r($this->data,1).'</pre>');
-
         $this->data['success'] = TRUE;
         $this->data['message'] = 'CARACTERÍSTICAS DE DOCUMENTO APLICADAS';
         return $this->data;
@@ -306,9 +294,6 @@ Class Docu_serv_Controller Extends Docu_Model {
             foreach($_get_tiposDocumentos_caracteristicas AS $k=>$v){
                 $this->data['data']['caracteristicas'][$v['skCaracteristica']] = $v;
             }
-
-        //exit('<pre>'.print_r($this->docu,1).'</pre>');
-        //exit('<pre>'.print_r($this->data,1).'</pre>');
 
         return $this->data;
     }
